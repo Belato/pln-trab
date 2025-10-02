@@ -1,0 +1,5 @@
+https://medium.com/@jessicacunha.jsc/mapa-de-calor-de-correla%C3%A7%C3%A3o-heatmap-ba37f5405400
+https://docs.kanaries.net/pt/topics/Python/text-cleaning-python
+https://www.geeksforgeeks.org/python/correcting-words-using-nltk-in-python/
+https://www.kaggle.com/code/bouweceunen/levenshtein-distance-spelling-correction-nlp
+https://www.kaggle.com/code/bouweceunen/levenshtein-distance-spelling-correction-nlp
