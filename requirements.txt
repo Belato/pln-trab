@@ -1,1 +1,7 @@
 pyenchant
+python-Levenshtein
+gensim
+scikit-learn
+nltk
+pandas
+openpyxl

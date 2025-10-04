@@ -8,7 +8,7 @@ class PreProcessing:
         nltk.download('stopwords')
         self.stop_words = nltk.corpus.stopwords.words('portuguese')
         self.stemmer = nltk.stem.RSLPStemmer()
-        # self.words_dict = enchant.Dict("pt_BR")
+        self.words_dict = enchant.Dict("pt_BR")
         
 
     def split_in_documents(self, text):
@@ -26,15 +26,15 @@ class PreProcessing:
         
         return formatted_text
 
-    # def stemming_words(self, text):
-    #     stemmed_words = [self.stemmer.stem(word) for word in text]
-    #     formatted_text = ' '.join(stemmed_words)
-    #     return formatted_text
 
     def tokenization(self, text):
         tokens = nltk.word_tokenize(text)
-        
-        
+        for t in tokens:
+            if '-' in t:
+                tokens.remove(t)
+                new_tokens = t.split('-')
+                tokens.extend(new_tokens)
+
 
         return tokens
     
@@ -48,7 +48,7 @@ class PreProcessing:
         return formatted_text
 
 
-    def stemizer(self, text):
+    def stemming_words(self, text):
         
         formatted_text = []
         for word in text:
@@ -65,12 +65,39 @@ class PreProcessing:
         return new_text
         
     
-    # def correct_words(self, text):
+    def correct_words(self, text):
+        from Levenshtein import distance
 
-    #     formatted_text = []
-    #     for word in text:
+        formatted_text = []
+        for word in text:
 
-    #         if not self.words_dict.check(word):
-    #             formatted_text.append(self.words_dict.suggest(word))
+            if not self.words_dict.check(word):
+                similar_words = self.words_dict.suggest(word)
 
-    #     return formatted_text
+                most_similar_word = {"word": word, "distance": 100}
+                for s_word in similar_words:
+
+                    dist = distance(word, s_word)
+                    if dist < most_similar_word["distance"]:
+                        most_similar_word["distance"] = dist
+                        most_similar_word["word"] = s_word
+
+                word = most_similar_word["word"]
+                # word = self.words_dict.suggest(word)[0]
+            formatted_text.append(word)
+
+        return formatted_text
+    
+
+    def pipeline(self, text):
+        # text = self.split_in_documents(text)
+        text = self.lower_text(text)
+        for sentence in text:
+            tokens = self.tokenization(sentence)
+            tokens = self.remove_special_characters(tokens)
+            tokens = self.remove_stop_words(tokens)
+            tokens = self.correct_words(tokens)
+            tokens = self.stemming_words(tokens)
+            text[text.index(sentence)] = tokens
+
+        return text
